@@ -87,7 +87,7 @@ const Login = () => {
             <input 
               type="text" 
               className="form-control"
-              placeholder="e.g. 9876543210 or admin@easyvyaapaar.com"
+              placeholder="e.g. 9876543210 or your email"
               value={formData.emailOrMobile}
               onChange={(e) => setFormData({ ...formData, emailOrMobile: e.target.value })}
               required
@@ -171,8 +171,7 @@ const Login = () => {
               style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '0.65rem 0.4rem', cursor: 'pointer', textAlign: 'center' }}
             >
               <strong style={{ fontSize: '0.88rem' }}>👑 Demo Admin</strong>
-              <span style={{ fontSize: '0.72rem', color: '#1d4ed8', marginTop: '0.2rem' }}>admin@easyvyaapaar.com</span>
-              <span style={{ fontSize: '0.68rem', color: '#64748b' }}>Pass: Admin@123</span>
+              <span style={{ fontSize: '0.68rem', color: '#64748b', marginTop: '0.2rem' }}>Pass: Admin@123</span>
             </button>
           </div>
         </div>

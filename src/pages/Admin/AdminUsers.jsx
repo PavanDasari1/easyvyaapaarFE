@@ -114,7 +114,7 @@ const AdminUsers = () => {
               <tr key={u.id}>
                 <td><strong>{u.name}</strong></td>
                 <td>
-                  <div>{u.email}</div>
+                  <div>{u.role === 'SUPER_ADMIN' ? '🛡️ Protected System Admin' : u.email}</div>
                   <div style={{ fontSize: '0.78rem', color: '#64748b' }}>📱 {u.mobile}</div>
                 </td>
                 <td>
@@ -169,7 +169,7 @@ const AdminUsers = () => {
             <h3>👤 User Profile & Role Authorization</h3>
             <div style={{ margin: '1rem 0', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
               <div><strong>Name:</strong> {selectedUser.name}</div>
-              <div><strong>Email:</strong> {selectedUser.email}</div>
+              <div><strong>Email:</strong> {selectedUser.role === 'SUPER_ADMIN' ? '🛡️ Protected System Admin' : selectedUser.email}</div>
               <div><strong>Mobile:</strong> {selectedUser.mobile}</div>
               <div><strong>Role:</strong> {selectedUser.role}</div>
               <div><strong>Assigned Shop:</strong> {selectedUser.shopName}</div>
