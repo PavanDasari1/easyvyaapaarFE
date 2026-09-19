@@ -2,11 +2,10 @@ import { useState } from 'react';
 import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
 import Sidebar from './components/Sidebar/Sidebar';
 import Navbar from './components/Navbar/Navbar';
-import Dashboard from './pages/Dashboard';
-import Products from './pages/Products';
-import Transactions from './pages/Transactions';
-import Settings from './pages/Settings';
-import Reports from './pages/Reports';
+
+// Auth Pages
+import Login from './pages/Login';
+import Signup from './pages/Signup';
 
 // Admin Pages
 import AdminDashboard from './pages/Admin/AdminDashboard';
@@ -20,17 +19,35 @@ import ShopkeeperInventory from './pages/Shopkeeper/ShopkeeperInventory';
 import ShopkeeperSales from './pages/Shopkeeper/ShopkeeperSales';
 import ShopkeeperReports from './pages/Shopkeeper/ShopkeeperReports';
 
+// Shared Pages
+import Products from './pages/Products';
+import Transactions from './pages/Transactions';
+import Settings from './pages/Settings';
+import Reports from './pages/Reports';
+
 import { useAuth } from './context/AuthContext';
 
 function App() {
   const [searchQuery, setSearchQuery] = useState('');
-  const { isSuperAdmin } = useAuth();
+  const { isAuthenticated, isSuperAdmin } = useAuth();
   const navigate = useNavigate();
 
   const handleOpenAddModal = () => {
     navigate('/products');
   };
 
+  // 1. Unauthenticated users MUST see the Login / Signup page first
+  if (!isAuthenticated) {
+    return (
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="*" element={<Navigate to="/login" replace />} />
+      </Routes>
+    );
+  }
+
+  // 2. Authenticated users see the Full App Layout
   return (
     <div className="app-layout">
       <Sidebar onOpenAddModal={handleOpenAddModal} />
@@ -38,6 +55,10 @@ function App() {
         <Navbar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
         <main className="main-content-body">
           <Routes>
+            {/* Login/Signup redirects to home for logged in users */}
+            <Route path="/login" element={<Navigate to="/" replace />} />
+            <Route path="/signup" element={<Navigate to="/" replace />} />
+
             {/* Dynamic Root Route based on Active Role */}
             <Route 
               path="/" 

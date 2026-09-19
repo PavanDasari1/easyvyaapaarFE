@@ -19,7 +19,7 @@ const VoiceMic = ({ onCommandParsed, onAssistantResponse, onSampleClick }) => {
     return map[langCode] || 'en-IN';
   };
 
-  const { isListening, transcript, error, startListening, stopListening, hasSupport } = useSpeechRecognition(getSpeechLocale(lang));
+  const { isListening, transcript, error, startListening, stopListening } = useSpeechRecognition(getSpeechLocale(lang));
   const [processing, setProcessing] = useState(false);
 
   useEffect(() => {
@@ -28,16 +28,31 @@ const VoiceMic = ({ onCommandParsed, onAssistantResponse, onSampleClick }) => {
     }
   }, [isListening, transcript]);
 
+  // Speak assistant response out loud using Web SpeechSynthesis
+  const speakOutLoud = (textToSpeak) => {
+    if ('speechSynthesis' in window && textToSpeak) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(textToSpeak);
+      utterance.lang = getSpeechLocale(lang);
+      window.speechSynthesis.speak(utterance);
+    }
+  };
+
   const handleProcessCommand = async (text) => {
     setProcessing(true);
     try {
       const res = await processVoiceCommand(text, lang);
-      const parsedData = res.data;
+      const parsedData = res.data || res;
       
       if (parsedData.intent === 'QUERY_STOCK' || parsedData.intent === 'QUERY_LOW_STOCK') {
          const queryRes = await queryAssistant(text, lang);
+         const answer = (queryRes && queryRes.data) ? queryRes.data : (queryRes.message || "Query processed.");
+         
+         // Speak out loud!
+         speakOutLoud(answer);
+
          if (onAssistantResponse) {
-           onAssistantResponse(queryRes.data.answer);
+           onAssistantResponse(answer);
          }
       } else {
          if (onCommandParsed) {
@@ -46,8 +61,10 @@ const VoiceMic = ({ onCommandParsed, onAssistantResponse, onSampleClick }) => {
       }
     } catch (err) {
       console.error(err);
+      const errFallback = "Sorry, I had trouble understanding. Please try speaking again.";
+      speakOutLoud(errFallback);
       if (onAssistantResponse) {
-        onAssistantResponse("Sorry, I had trouble understanding. Please try again.");
+        onAssistantResponse(errFallback);
       }
     } finally {
       setProcessing(false);

@@ -1,0 +1,195 @@
+/* Login Page Container - Centered, Grand EasyVyaapaar Branding */
+.login-page-container {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+  padding: 1.5rem;
+  box-sizing: border-box;
+}
+
+.login-card-wrapper {
+  width: 100%;
+  max-width: 440px;
+  padding: 2.25rem 2rem;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+  animation: fadeIn 0.4s ease-in-out;
+}
+
+.login-brand-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.brand-logo-icon {
+  font-size: 3rem;
+  margin-bottom: 0.25rem;
+}
+
+.brand-title {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.brand-tagline {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin-top: 0.35rem;
+}
+
+.login-role-tabs {
+  display: flex;
+  background: #f1f5f9;
+  padding: 0.25rem;
+  border-radius: 10px;
+  margin-bottom: 1.5rem;
+}
+
+.role-tab-btn {
+  flex: 1;
+  padding: 0.6rem 0.5rem;
+  border: none;
+  background: transparent;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #64748b;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.role-tab-btn.active-tab {
+  background: #ffffff;
+  color: #0f172a;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.login-form-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.82rem;
+}
+
+.remember-me-label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: #475569;
+  cursor: pointer;
+}
+
+.forgot-password-link {
+  color: #2563eb;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.forgot-password-link:hover {
+  text-decoration: underline;
+}
+
+.login-submit-btn {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-top: 0.5rem;
+}
+
+.demo-login-section {
+  margin-top: 1.5rem;
+  text-align: center;
+}
+
+.demo-divider {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.demo-divider::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: #e2e8f0;
+}
+
+.demo-divider span {
+  position: relative;
+  background: #ffffff;
+  padding: 0 0.75rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #94a3b8;
+  letter-spacing: 0.05em;
+}
+
+.demo-buttons-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.demo-btn {
+  padding: 0.55rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.shopkeeper-demo-btn {
+  background: #f0fdf4;
+  color: #166534;
+  border-color: #bbf7d0;
+}
+
+.shopkeeper-demo-btn:hover {
+  background: #dcfce7;
+}
+
+.admin-demo-btn {
+  background: #eff6ff;
+  color: #1e40af;
+  border-color: #bfdbfe;
+}
+
+.admin-demo-btn:hover {
+  background: #dbeafe;
+}
+
+.login-footer {
+  margin-top: 1.5rem;
+  text-align: center;
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+.signup-link {
+  color: #2563eb;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.signup-link:hover {
+  text-decoration: underline;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

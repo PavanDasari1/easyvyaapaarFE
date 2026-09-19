@@ -3,24 +3,53 @@ import { createContext, useContext, useState, useEffect } from 'react';
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  // Default to SUPER_ADMIN for testing, or restore from localStorage
-  const [role, setRole] = useState(() => {
-    return localStorage.getItem('easyvyaapaar_role') || 'SUPER_ADMIN';
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    return localStorage.getItem('easyvyaapaar_auth') === 'true';
   });
 
-  const [user, setUser] = useState({
-    id: 1,
-    name: 'Dasari Pavan',
-    email: 'admin@easyvyaapaar.com',
-    mobile: '+91 9876543210',
-    shopId: 101,
-    shopName: 'Sri Lakshmi Kirana & General Store',
-    status: 'ACTIVE'
+  const [role, setRole] = useState(() => {
+    return localStorage.getItem('easyvyaapaar_role') || 'SHOP_KEEPER';
+  });
+
+  const [user, setUser] = useState(() => {
+    const savedUser = localStorage.getItem('easyvyaapaar_user');
+    if (savedUser) {
+      try {
+        return JSON.parse(savedUser);
+      } catch (e) {}
+    }
+    return {
+      id: 2,
+      name: 'Shop Owner',
+      email: 'shopkeeper@easyvyaapaar.com',
+      mobile: '+91 9876543210',
+      shopId: 101,
+      shopName: 'Sri Lakshmi Kirana & General Store',
+      status: 'ACTIVE'
+    };
   });
 
   useEffect(() => {
+    localStorage.setItem('easyvyaapaar_auth', isAuthenticated);
     localStorage.setItem('easyvyaapaar_role', role);
-  }, [role]);
+    localStorage.setItem('easyvyaapaar_user', JSON.stringify(user));
+  }, [isAuthenticated, role, user]);
+
+  const login = (userData) => {
+    const newRole = userData.role || 'SHOP_KEEPER';
+    setUser(userData);
+    setRole(newRole);
+    setIsAuthenticated(true);
+  };
+
+  const signup = (userData) => {
+    login(userData);
+  };
+
+  const logout = () => {
+    setIsAuthenticated(false);
+    localStorage.removeItem('easyvyaapaar_auth');
+  };
 
   const toggleRole = (newRole) => {
     if (newRole) {
@@ -34,7 +63,19 @@ export const AuthProvider = ({ children }) => {
   const isShopkeeper = role === 'SHOP_KEEPER';
 
   return (
-    <AuthContext.Provider value={{ role, setRole, toggleRole, isSuperAdmin, isShopkeeper, user, setUser }}>
+    <AuthContext.Provider value={{ 
+      isAuthenticated, 
+      login, 
+      signup, 
+      logout, 
+      role, 
+      setRole, 
+      toggleRole, 
+      isSuperAdmin, 
+      isShopkeeper, 
+      user, 
+      setUser 
+    }}>
       {children}
     </AuthContext.Provider>
   );

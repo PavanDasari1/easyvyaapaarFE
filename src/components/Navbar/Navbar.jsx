@@ -1,10 +1,12 @@
+import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../../i18n';
 import { useAuth } from '../../context/AuthContext';
 import './Navbar.css';
 
 const Navbar = ({ searchQuery, setSearchQuery }) => {
   const { lang, setLang } = useLanguage();
-  const { role, setRole, isSuperAdmin, user } = useAuth();
+  const { role, setRole, isSuperAdmin, user, logout } = useAuth();
+  const navigate = useNavigate();
 
   const handleLanguageChange = (e) => {
     setLang(e.target.value);
@@ -12,6 +14,11 @@ const Navbar = ({ searchQuery, setSearchQuery }) => {
 
   const handleRoleChange = (e) => {
     setRole(e.target.value);
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
   };
 
   return (
@@ -68,10 +75,18 @@ const Navbar = ({ searchQuery, setSearchQuery }) => {
             {isSuperAdmin ? 'A' : 'S'}
           </div>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <span className="user-name">{isSuperAdmin ? 'System Admin' : user.shopkeeperName || 'Shopkeeper'}</span>
+            <span className="user-name">{isSuperAdmin ? 'System Admin' : user.name || 'Shopkeeper'}</span>
             <span style={{ fontSize: '0.7rem', color: '#64748b', fontWeight: 500 }}>{isSuperAdmin ? 'All Shops Access' : user.shopName || 'Kirana Shop'}</span>
           </div>
         </div>
+
+        <button 
+          onClick={handleLogout}
+          title="Sign Out"
+          style={{ background: '#fef2f2', color: '#dc2626', border: '1px solid #fecaca', padding: '0.4rem 0.75rem', borderRadius: '8px', fontSize: '0.8rem', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.3rem' }}
+        >
+          🚪 Logout
+        </button>
       </div>
     </header>
   );
