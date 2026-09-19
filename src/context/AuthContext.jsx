@@ -25,6 +25,7 @@ export const AuthProvider = ({ children }) => {
       mobile: '+91 9876543210',
       shopId: 101,
       shopName: 'Sri Lakshmi Kirana & General Store',
+      upiId: '9876543210@ybl',
       status: 'ACTIVE'
     };
   });
@@ -34,6 +35,14 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem('easyvyaapaar_role', role);
     localStorage.setItem('easyvyaapaar_user', JSON.stringify(user));
   }, [isAuthenticated, role, user]);
+
+  const updateUserProfile = (updatedData) => {
+    setUser(prev => {
+      const newObj = { ...prev, ...updatedData };
+      localStorage.setItem('easyvyaapaar_user', JSON.stringify(newObj));
+      return newObj;
+    });
+  };
 
   // Persistent Users Database in LocalStorage
   const [usersDb, setUsersDb] = useState(() => {
@@ -163,6 +172,7 @@ export const AuthProvider = ({ children }) => {
       isShopkeeper, 
       user, 
       setUser,
+      updateUserProfile,
       usersDb,
       checkUserExists,
       findUserByCredentials

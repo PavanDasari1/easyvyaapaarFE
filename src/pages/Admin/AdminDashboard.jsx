@@ -32,9 +32,9 @@ const AdminDashboard = () => {
 
   if (loading) return <div className="loading-spinner">Loading System Overview...</div>;
 
-  const totalShops = summary?.totalShops || 3;
-  const totalUsers = summary?.totalUsers || 4;
-  const totalShopkeepers = summary?.totalShopkeepers || 3;
+  const totalShops = summary?.totalShops || 1;
+  const totalUsers = summary?.totalUsers || 2;
+  const totalShopkeepers = summary?.totalShopkeepers || 1;
   const totalProducts = summary?.totalProducts || products.length;
   const lowStockCount = summary?.lowStockProducts || products.filter(p => p.currentStock <= p.minimumStock).length;
   const totalStockVal = summary?.totalStockValue || products.reduce((sum, p) => sum + ((p.currentStock || 0) * (p.price || 0)), 0);
@@ -108,7 +108,7 @@ const AdminDashboard = () => {
           <div className="stat-icon-wrap bg-light-purple">₹</div>
           <div className="stat-details">
             <span className="stat-title">Today's Sales</span>
-            <div className="stat-value">₹ {(summary?.todaySales || 14850).toLocaleString('en-IN')}</div>
+            <div className="stat-value">₹ {(summary?.todaySales || 0).toLocaleString('en-IN')}</div>
             <span className="stat-subtext">System-wide sales</span>
           </div>
         </div>
@@ -193,15 +193,15 @@ const AdminDashboard = () => {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem' }}>
               <div style={{ padding: '0.8rem', background: '#f8fafc', borderRadius: '8px', borderLeft: '4px solid #16a34a' }}>
                 <span style={{ fontSize: '0.8rem', color: '#64748b' }}>Today's System Sales</span>
-                <div style={{ fontSize: '1.25rem', fontWeight: 700, color: '#16a34a' }}>₹ {(summary?.todaySales || 14850).toLocaleString('en-IN')}</div>
+                <div style={{ fontSize: '1.25rem', fontWeight: 700, color: '#16a34a' }}>₹ {(summary?.todaySales || 0).toLocaleString('en-IN')}</div>
               </div>
               <div style={{ padding: '0.8rem', background: '#f8fafc', borderRadius: '8px', borderLeft: '4px solid #2563eb' }}>
                 <span style={{ fontSize: '0.8rem', color: '#64748b' }}>Weekly Sales</span>
-                <div style={{ fontSize: '1.25rem', fontWeight: 700, color: '#2563eb' }}>₹ {(summary?.weeklySales || 98400).toLocaleString('en-IN')}</div>
+                <div style={{ fontSize: '1.25rem', fontWeight: 700, color: '#2563eb' }}>₹ {(summary?.weeklySales || 0).toLocaleString('en-IN')}</div>
               </div>
               <div style={{ padding: '0.8rem', background: '#f8fafc', borderRadius: '8px', borderLeft: '4px solid #9333ea' }}>
                 <span style={{ fontSize: '0.8rem', color: '#64748b' }}>Monthly Sales</span>
-                <div style={{ fontSize: '1.25rem', fontWeight: 700, color: '#9333ea' }}>₹ {(summary?.monthlySales || 412000).toLocaleString('en-IN')}</div>
+                <div style={{ fontSize: '1.25rem', fontWeight: 700, color: '#9333ea' }}>₹ {(summary?.monthlySales || 0).toLocaleString('en-IN')}</div>
               </div>
             </div>
           </div>

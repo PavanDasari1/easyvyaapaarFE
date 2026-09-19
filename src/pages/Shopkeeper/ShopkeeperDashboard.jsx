@@ -24,7 +24,8 @@ const ShopkeeperDashboard = ({ searchQuery = '' }) => {
     productId: '',
     quantity: 1,
     amount: '',
-    paymentStatus: 'PAID'
+    paymentStatus: 'PAID',
+    paymentMode: 'UPI'
   });
 
   const loadShopkeeperData = async () => {
@@ -249,11 +250,22 @@ const ShopkeeperDashboard = ({ searchQuery = '' }) => {
             <div className="panel-header">
               <div className="panel-title">
                 <span className="alert-icon-wrap">⚠️</span>
-                <h3>Low Stock Items</h3>
+                <h3>Low Stock Shortage Alert</h3>
               </div>
-              <button className="copy-whatsapp-btn" onClick={() => navigate('/ShopkeeperInventory')}>
-                View All →
-              </button>
+              {lowStockItems.length > 0 && (
+                <button 
+                  className="btn btn-secondary" 
+                  style={{ fontSize: '0.75rem', padding: '0.2rem 0.5rem', background: '#f0fdf4', color: '#166534', borderColor: '#bbf7d0' }}
+                  onClick={() => {
+                    const lines = lowStockItems.map((item, idx) => `${idx + 1}. ${item.name} (${item.currentStock} ${item.unit || ''} remaining)`);
+                    const msg = `📦 Stock Reorder Order from ${user.shopName || 'Sri Lakshmi Kirana'}:\n\n` + lines.join('\n') + `\n\nPlease deliver at earliest convenience. Thanks!`;
+                    window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+                  }}
+                  title="Send reorder list to supplier via WhatsApp"
+                >
+                  💬 Supplier Order
+                </button>
+              )}
             </div>
 
             <div className="shortage-alert-list" style={{ marginTop: '0.75rem' }}>
@@ -358,7 +370,7 @@ const ShopkeeperDashboard = ({ searchQuery = '' }) => {
                   Cancel
                 </button>
                 <button type="submit" className="btn btn-primary">
-                  Save Sale
+                  Confirm & Save Sale
                 </button>
               </div>
             </form>
