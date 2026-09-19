@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getAllProducts } from '../../services/productService';
-import { getRecentTransactions, addStock } from '../../services/inventoryService';
+import { getRecentTransactions, addStock, removeStock } from '../../services/inventoryService';
 import { confirmVoiceCommand } from '../../services/voiceService';
 import { useAuth } from '../../context/AuthContext';
 import VoiceMic from '../../components/VoiceMic/VoiceMic';
@@ -79,9 +79,17 @@ const ShopkeeperDashboard = ({ searchQuery = '' }) => {
     }
     try {
       const selectedProd = products.find(p => p.id === Number(saleForm.productId));
-      await addStock({
+      const qtyToSell = parseFloat(saleForm.quantity) || 1;
+
+      if (selectedProd && selectedProd.currentStock < qtyToSell) {
+        if (!confirm(`Warning: Selling ${qtyToSell} ${selectedProd.unit} exceeds current stock (${selectedProd.currentStock}). Do you want to proceed?`)) {
+          return;
+        }
+      }
+
+      await removeStock({
         productId: Number(saleForm.productId),
-        quantity: parseFloat(saleForm.quantity) || 1,
+        quantity: qtyToSell,
         unit: selectedProd ? selectedProd.unit : 'PIECE',
         price: saleForm.amount ? parseFloat(saleForm.amount) : null,
         source: 'MANUAL',
