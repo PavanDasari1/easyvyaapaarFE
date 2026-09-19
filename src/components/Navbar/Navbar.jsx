@@ -5,15 +5,11 @@ import './Navbar.css';
 
 const Navbar = ({ searchQuery, setSearchQuery }) => {
   const { lang, setLang } = useLanguage();
-  const { role, setRole, isSuperAdmin, user, logout } = useAuth();
+  const { isSuperAdmin, user, logout } = useAuth();
   const navigate = useNavigate();
 
   const handleLanguageChange = (e) => {
     setLang(e.target.value);
-  };
-
-  const handleRoleChange = (e) => {
-    setRole(e.target.value);
   };
 
   const handleLogout = () => {
@@ -36,17 +32,12 @@ const Navbar = ({ searchQuery, setSearchQuery }) => {
       </div>
 
       <div className="navbar-actions">
-        {/* Role Selector Badge */}
+        {/* Read-Only Role Badge */}
         <div className="role-selector-wrapper" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', background: isSuperAdmin ? '#eff6ff' : '#f0fdf4', padding: '0.35rem 0.65rem', borderRadius: '8px', border: isSuperAdmin ? '1px solid #bfdbfe' : '1px solid #bbf7d0' }}>
           <span style={{ fontSize: '0.85rem' }}>{isSuperAdmin ? '👑' : '🏪'}</span>
-          <select 
-            value={role} 
-            onChange={handleRoleChange}
-            style={{ border: 'none', background: 'transparent', fontSize: '0.82rem', fontWeight: '600', color: isSuperAdmin ? '#1e40af' : '#166534', cursor: 'pointer', outline: 'none' }}
-          >
-            <option value="SUPER_ADMIN">Admin View</option>
-            <option value="SHOP_KEEPER">Shopkeeper View</option>
-          </select>
+          <span style={{ fontSize: '0.82rem', fontWeight: '600', color: isSuperAdmin ? '#1e40af' : '#166534' }}>
+            {isSuperAdmin ? 'System Admin' : 'Shopkeeper'}
+          </span>
         </div>
 
         <div className="lang-dropdown-wrapper">

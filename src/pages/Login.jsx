@@ -7,7 +7,6 @@ const Login = () => {
   const { login, findUserByCredentials } = useAuth();
   const navigate = useNavigate();
 
-  const [selectedRole, setSelectedRole] = useState('SHOP_KEEPER');
   const [formData, setFormData] = useState({
     emailOrMobile: '',
     password: ''
@@ -33,8 +32,8 @@ const Login = () => {
     setSubmitting(true);
 
     setTimeout(() => {
-      // Look up user in registered database
-      const matchedUser = findUserByCredentials(inputStr, passStr, selectedRole);
+      // 1. Look up user in registered database strictly by credentials
+      const matchedUser = findUserByCredentials(inputStr, passStr);
 
       if (matchedUser) {
         if (matchedUser.status === 'DISABLED') {
@@ -45,23 +44,23 @@ const Login = () => {
         login(matchedUser);
         navigate(matchedUser.role === 'SUPER_ADMIN' ? '/AdminDashboard' : '/ShopkeeperDashboard');
       } else {
-        // Fallback for default Admin / demo credentials check
+        // 2. Strict System Admin Credential Check
         const isAdminEmail = inputStr.toLowerCase() === 'admin@easyvyaapaar.com' || inputStr === '9876543210';
         const isAdminPass = passStr === 'Admin@123';
 
-        if (selectedRole === 'SUPER_ADMIN' && isAdminEmail && isAdminPass) {
+        if (isAdminEmail && isAdminPass) {
           login({
             id: 1,
             name: 'Dasari Pavan (Admin)',
             email: 'admin@easyvyaapaar.com',
             mobile: '+91 9876543210',
             role: 'SUPER_ADMIN',
-            shopName: 'All Shops System Access',
+            shopName: 'System Administration',
             status: 'ACTIVE'
           });
           navigate('/AdminDashboard');
         } else {
-          setErrorMsg('Invalid login credentials or role selection. Please verify your Mobile number / User ID and Password.');
+          setErrorMsg('Invalid login credentials! Please check your Mobile Number / Email and Password.');
         }
       }
 
@@ -79,34 +78,16 @@ const Login = () => {
           <p className="brand-tagline">Speak Your Business. Manage Your Stock.</p>
         </div>
 
-        {/* Role Toggle Selector */}
-        <div className="login-role-tabs">
-          <button 
-            type="button" 
-            className={`role-tab-btn ${selectedRole === 'SHOP_KEEPER' ? 'active-tab' : ''}`}
-            onClick={() => { setSelectedRole('SHOP_KEEPER'); setErrorMsg(''); }}
-          >
-            🏪 Shopkeeper
-          </button>
-          <button 
-            type="button" 
-            className={`role-tab-btn ${selectedRole === 'SUPER_ADMIN' ? 'active-tab' : ''}`}
-            onClick={() => { setSelectedRole('SUPER_ADMIN'); setErrorMsg(''); }}
-          >
-            👑 Admin
-          </button>
-        </div>
-
         {errorMsg && <div className="alert alert-danger" style={{ marginBottom: '1rem', fontSize: '0.82rem' }}>{errorMsg}</div>}
 
         {/* Login Form */}
         <form onSubmit={handleSubmit} className="login-form">
           <div className="form-group">
-            <label className="form-label">{selectedRole === 'SUPER_ADMIN' ? 'Admin Email / Username' : 'Mobile Number or Email *'}</label>
+            <label className="form-label">Mobile Number or Email Address *</label>
             <input 
               type="text" 
               className="form-control"
-              placeholder={selectedRole === 'SUPER_ADMIN' ? 'admin@easyvyaapaar.com' : 'Enter mobile number or email'}
+              placeholder="e.g. 9876543210 or admin@easyvyaapaar.com"
               value={formData.emailOrMobile}
               onChange={(e) => setFormData({ ...formData, emailOrMobile: e.target.value })}
               required
@@ -135,9 +116,58 @@ const Login = () => {
           </div>
 
           <button type="submit" className="btn btn-primary login-submit-btn" disabled={submitting}>
-            {submitting ? 'Signing In...' : `Sign In as ${selectedRole === 'SUPER_ADMIN' ? 'Admin' : 'Shopkeeper'}`}
+            {submitting ? 'Authenticating...' : 'Sign In'}
           </button>
         </form>
+
+        {/* Quick Demo Login Access */}
+        <div style={{ marginTop: '1.25rem', paddingTop: '1rem', borderTop: '1px solid #e2e8f0', textAlign: 'center' }}>
+          <span style={{ fontSize: '0.78rem', color: '#64748b', fontWeight: 600, display: 'block', marginBottom: '0.6rem' }}>
+            ⚡ QUICK DEMO LOGINS (Click to Sign In):
+          </span>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
+            <button 
+              type="button" 
+              className="btn btn-secondary"
+              style={{ fontSize: '0.8rem', padding: '0.45rem', background: '#eff6ff', color: '#1d4ed8', borderColor: '#bfdbfe', fontWeight: 600 }}
+              onClick={() => {
+                setFormData({ emailOrMobile: 'admin@easyvyaapaar.com', password: 'Admin@123' });
+                login({
+                  id: 1,
+                  name: 'Dasari Pavan (Admin)',
+                  email: 'admin@easyvyaapaar.com',
+                  mobile: '+91 9876543210',
+                  role: 'SUPER_ADMIN',
+                  shopName: 'System Administration',
+                  status: 'ACTIVE'
+                });
+                navigate('/AdminDashboard');
+              }}
+            >
+              👑 Demo Admin
+            </button>
+            <button 
+              type="button" 
+              className="btn btn-secondary"
+              style={{ fontSize: '0.8rem', padding: '0.45rem', background: '#f0fdf4', color: '#15803d', borderColor: '#bbf7d0', fontWeight: 600 }}
+              onClick={() => {
+                setFormData({ emailOrMobile: 'shopkeeper@easyvyaapaar.com', password: 'Shopkeeper@123' });
+                login({
+                  id: 2,
+                  name: 'Ramesh Kumar',
+                  email: 'shopkeeper@easyvyaapaar.com',
+                  mobile: '9123456789',
+                  role: 'SHOP_KEEPER',
+                  shopName: 'Sri Lakshmi Kirana & General Store',
+                  status: 'ACTIVE'
+                });
+                navigate('/ShopkeeperDashboard');
+              }}
+            >
+              🏪 Demo Shopkeeper
+            </button>
+          </div>
+        </div>
 
         {/* Footer Link to Signup */}
         <div className="login-footer">

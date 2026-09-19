@@ -120,15 +120,14 @@ export const AuthProvider = ({ children }) => {
     return newUser;
   };
 
-  const findUserByCredentials = (inputStr, password, roleFilter) => {
+  const findUserByCredentials = (inputStr, password) => {
     const target = inputStr.toLowerCase().trim();
     const targetPhone = cleanPhone(inputStr);
 
     return usersDb.find(u => {
       const matchesId = u.email.toLowerCase().trim() === target || (targetPhone !== '' && cleanPhone(u.mobile) === targetPhone);
       const matchesPass = u.password === password;
-      const matchesRole = roleFilter ? u.role === roleFilter : true;
-      return matchesId && matchesPass && matchesRole;
+      return matchesId && matchesPass;
     });
   };
 
