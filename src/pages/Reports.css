@@ -1,0 +1,43 @@
+.reports-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.reports-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.reports-header h2 {
+  font-size: 1.4rem;
+  font-weight: 800;
+  margin: 0 0 0.2rem 0;
+}
+
+.reports-header p {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin: 0;
+}
+
+.analytics-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+}
+
+.category-breakdown-card h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+@media (max-width: 992px) {
+  .analytics-summary-grid {
+    grid-template-columns: 1fr;
+  }
+}

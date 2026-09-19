@@ -1,0 +1,140 @@
+.stock-card {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 1rem 1.15rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+}
+
+.stock-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+}
+
+.stock-card.card-shortage-alert {
+  border: 2px solid #f97316;
+  background-color: #fff7ed;
+}
+
+.shortage-banner {
+  background-color: #ef4444;
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 0.25rem 0.6rem;
+  border-radius: 6px;
+  display: inline-block;
+  align-self: flex-start;
+  box-shadow: 0 1px 3px rgba(239, 68, 68, 0.25);
+}
+
+.card-top-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.stock-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.product-name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+}
+
+.product-category {
+  font-size: 0.75rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.product-price {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #16a34a;
+}
+
+.price-unit {
+  font-size: 0.72rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.card-bottom-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  padding-top: 0.4rem;
+  border-top: 1px dashed #e2e8f0;
+}
+
+.stock-quantity-display {
+  display: flex;
+  align-items: baseline;
+  gap: 0.3rem;
+}
+
+.qty-val {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.qty-lbl {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.quick-action-btns {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.action-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  transition: background-color 0.15s ease, transform 0.1s ease;
+}
+
+.action-btn:active {
+  transform: scale(0.92);
+}
+
+.remove-btn {
+  background-color: #f1f5f9;
+  color: #475569;
+}
+
+.remove-btn:hover {
+  background-color: #e2e8f0;
+  color: #0f172a;
+}
+
+.add-btn {
+  background-color: #16a34a;
+  color: #ffffff;
+}
+
+.add-btn:hover {
+  background-color: #15803d;
+}
