@@ -70,20 +70,20 @@ const Navbar = ({ searchQuery, setSearchQuery }) => {
           <span className="notification-badge">1</span>
         </button>
 
-        <div className="user-profile">
-          <div className="user-avatar" style={{ background: isSuperAdmin ? '#2563eb' : '#16a34a' }}>
-            {isSuperAdmin ? 'A' : 'S'}
+        <div className="user-profile" title={user.name || 'User Profile'}>
+          <div className="user-avatar" style={{ background: isSuperAdmin ? 'linear-gradient(135deg, #2563eb, #1d4ed8)' : 'linear-gradient(135deg, #16a34a, #15803d)' }}>
+            {user?.name ? user.name.charAt(0).toUpperCase() : (isSuperAdmin ? 'A' : 'S')}
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <span className="user-name">{isSuperAdmin ? 'System Admin' : user.name || 'Shopkeeper'}</span>
-            <span style={{ fontSize: '0.7rem', color: '#64748b', fontWeight: 500 }}>{isSuperAdmin ? 'All Shops Access' : user.shopName || 'Kirana Shop'}</span>
+          <div className="user-info-text">
+            <span className="user-name-text">{isSuperAdmin ? 'System Admin' : (user.name || 'Shopkeeper')}</span>
+            <span className="user-role-subtext">{isSuperAdmin ? 'All Shops Access' : (user.shopName || 'Store Manager')}</span>
           </div>
         </div>
 
         <button 
           onClick={handleLogout}
+          className="navbar-logout-btn"
           title="Sign Out"
-          style={{ background: '#fef2f2', color: '#dc2626', border: '1px solid #fecaca', padding: '0.4rem 0.75rem', borderRadius: '8px', fontSize: '0.8rem', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.3rem' }}
         >
           🚪 Logout
         </button>

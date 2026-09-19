@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import './Login.css';
 
 const Login = () => {
-  const { login } = useAuth();
+  const { login, findUserByCredentials } = useAuth();
   const navigate = useNavigate();
 
   const [selectedRole, setSelectedRole] = useState('SHOP_KEEPER');
@@ -33,12 +33,23 @@ const Login = () => {
     setSubmitting(true);
 
     setTimeout(() => {
-      if (selectedRole === 'SUPER_ADMIN') {
-        // Strict System Admin Authentication Verification
+      // Look up user in registered database
+      const matchedUser = findUserByCredentials(inputStr, passStr, selectedRole);
+
+      if (matchedUser) {
+        if (matchedUser.status === 'DISABLED') {
+          setErrorMsg('This account has been disabled by the System Admin.');
+          setSubmitting(false);
+          return;
+        }
+        login(matchedUser);
+        navigate(matchedUser.role === 'SUPER_ADMIN' ? '/AdminDashboard' : '/ShopkeeperDashboard');
+      } else {
+        // Fallback for default Admin / demo credentials check
         const isAdminEmail = inputStr.toLowerCase() === 'admin@easyvyaapaar.com' || inputStr === '9876543210';
         const isAdminPass = passStr === 'Admin@123';
 
-        if (isAdminEmail && isAdminPass) {
+        if (selectedRole === 'SUPER_ADMIN' && isAdminEmail && isAdminPass) {
           login({
             id: 1,
             name: 'Dasari Pavan (Admin)',
@@ -50,20 +61,8 @@ const Login = () => {
           });
           navigate('/AdminDashboard');
         } else {
-          setErrorMsg('Invalid Admin credentials! System Admin credentials — Email: admin@easyvyaapaar.com | Password: Admin@123');
+          setErrorMsg('Invalid login credentials or role selection. Please verify your Mobile number / User ID and Password.');
         }
-      } else {
-        // Shopkeeper Login Authentication
-        login({
-          id: 2,
-          name: 'Shopkeeper User',
-          email: inputStr.includes('@') ? inputStr : `${inputStr}@shop.com`,
-          mobile: inputStr,
-          role: 'SHOP_KEEPER',
-          shopName: 'Sri Lakshmi Kirana & General Store',
-          status: 'ACTIVE'
-        });
-        navigate('/ShopkeeperDashboard');
       }
 
       setSubmitting(false);

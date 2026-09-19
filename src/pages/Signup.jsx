@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import './Login.css';
 
 const Signup = () => {
-  const { signup } = useAuth();
+  const { signup, checkUserExists } = useAuth();
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -18,29 +18,57 @@ const Signup = () => {
   const [errorMsg, setErrorMsg] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
+  // Live Password Constraint Validation Rules
+  const hasMinLength = formData.password.length >= 8;
+  const hasUpper = /[A-Z]/.test(formData.password);
+  const hasLower = /[a-z]/.test(formData.password);
+  const hasNumberOrSpecial = /[0-9!@#$%^&*(),.?":{}|<>]/.test(formData.password);
+  const isPasswordValid = hasMinLength && hasUpper && hasLower && hasNumberOrSpecial;
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    setErrorMsg('');
+
     if (!formData.fullName.trim() || !formData.email.trim() || !formData.mobile.trim() || !formData.password) {
       setErrorMsg('Please fill in all required fields.');
       return;
     }
 
-    setErrorMsg('');
+    // 1. Password Constraint Check
+    if (!isPasswordValid) {
+      setErrorMsg('Password does not meet safety constraints. Must be at least 8 characters with uppercase, lowercase, and a number or special symbol.');
+      return;
+    }
+
+    // 2. Unique Phone Number & Email / User ID Check
+    const { phoneExists, emailExists } = checkUserExists(formData.mobile, formData.email);
+    if (phoneExists) {
+      setErrorMsg(`Phone number "${formData.mobile}" is already registered with an existing account. Duplicate phone numbers are not allowed.`);
+      return;
+    }
+    if (emailExists) {
+      setErrorMsg(`Email / User ID "${formData.email}" is already registered. Duplicate User IDs are not allowed.`);
+      return;
+    }
+
     setSubmitting(true);
 
     setTimeout(() => {
-      signup({
-        id: Date.now(),
-        name: formData.fullName.trim(),
-        email: formData.email.trim(),
-        mobile: formData.mobile.trim(),
-        role: 'SHOP_KEEPER',
-        shopName: formData.shopName.trim() || 'My Kirana Shop',
-        status: 'ACTIVE'
-      });
-
-      navigate('/ShopkeeperDashboard');
-      setSubmitting(false);
+      try {
+        signup({
+          fullName: formData.fullName.trim(),
+          email: formData.email.trim(),
+          mobile: formData.mobile.trim(),
+          password: formData.password,
+          role: 'SHOP_KEEPER',
+          shopName: formData.shopName.trim() || 'My Kirana Shop'
+        });
+        navigate('/ShopkeeperDashboard');
+      } catch (err) {
+        setErrorMsg(err.message || 'Signup failed.');
+      } finally {
+        setSubmitting(false);
+      }
     }, 400);
   };
 
@@ -129,6 +157,21 @@ const Signup = () => {
               onChange={(e) => setFormData({ ...formData, password: e.target.value })}
               required
             />
+            {/* Live Password Constraint Rules Indicator */}
+            <div style={{ marginTop: '0.4rem', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.25rem', fontSize: '0.73rem' }}>
+              <div style={{ color: hasMinLength ? '#16a34a' : '#64748b', fontWeight: hasMinLength ? 600 : 400 }}>
+                {hasMinLength ? '✓' : '○'} At least 8 characters
+              </div>
+              <div style={{ color: hasUpper ? '#16a34a' : '#64748b', fontWeight: hasUpper ? 600 : 400 }}>
+                {hasUpper ? '✓' : '○'} One UPPERCASE letter
+              </div>
+              <div style={{ color: hasLower ? '#16a34a' : '#64748b', fontWeight: hasLower ? 600 : 400 }}>
+                {hasLower ? '✓' : '○'} One lowercase letter
+              </div>
+              <div style={{ color: hasNumberOrSpecial ? '#16a34a' : '#64748b', fontWeight: hasNumberOrSpecial ? 600 : 400 }}>
+                {hasNumberOrSpecial ? '✓' : '○'} One number / symbol
+              </div>
+            </div>
           </div>
 
           <button type="submit" className="btn btn-primary login-submit-btn" disabled={submitting}>
