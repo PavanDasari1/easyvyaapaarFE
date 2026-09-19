@@ -11,7 +11,7 @@ export const useSpeechRecognition = (language = 'en-US') => {
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
       const rec = new SpeechRecognition();
       rec.continuous = false;
-      rec.interimResults = false;
+      rec.interimResults = true; // Show live interim results as human is speaking
       rec.lang = language;
 
       rec.onstart = () => {
@@ -20,13 +20,18 @@ export const useSpeechRecognition = (language = 'en-US') => {
       };
 
       rec.onresult = (event) => {
-        const text = event.results[0][0].transcript;
-        setTranscript(text);
+        let currentText = '';
+        for (let i = 0; i < event.results.length; i++) {
+          currentText += event.results[i][0].transcript;
+        }
+        setTranscript(currentText);
       };
 
       rec.onerror = (event) => {
         console.error('Speech recognition error', event.error);
-        setError(event.error);
+        if (event.error !== 'no-speech') {
+          setError(event.error);
+        }
         setIsListening(false);
       };
 
@@ -35,6 +40,12 @@ export const useSpeechRecognition = (language = 'en-US') => {
       };
 
       setRecognition(rec);
+
+      return () => {
+        try {
+          rec.abort();
+        } catch (e) {}
+      };
     } else {
       setError('Browser does not support speech recognition.');
     }
@@ -53,7 +64,9 @@ export const useSpeechRecognition = (language = 'en-US') => {
 
   const stopListening = useCallback(() => {
     if (recognition) {
-      recognition.stop();
+      try {
+        recognition.stop();
+      } catch (e) {}
     }
   }, [recognition]);
 

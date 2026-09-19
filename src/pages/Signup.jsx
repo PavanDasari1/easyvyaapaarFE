@@ -34,12 +34,12 @@ const Signup = () => {
         name: formData.fullName.trim(),
         email: formData.email.trim(),
         mobile: formData.mobile.trim(),
-        role: formData.role,
+        role: 'SHOP_KEEPER',
         shopName: formData.shopName.trim() || 'My Kirana Shop',
         status: 'ACTIVE'
       });
 
-      navigate(formData.role === 'SUPER_ADMIN' ? '/AdminDashboard' : '/ShopkeeperDashboard');
+      navigate('/ShopkeeperDashboard');
       setSubmitting(false);
     }, 400);
   };
@@ -61,7 +61,7 @@ const Signup = () => {
             <input 
               type="text"
               className="form-control"
-              placeholder="e.g. Dasari Pavan"
+              placeholder="e.g. Ramesh Kumar"
               value={formData.fullName}
               onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
               required
@@ -106,15 +106,17 @@ const Signup = () => {
           </div>
 
           <div className="form-group">
-            <label className="form-label">Account Role *</label>
-            <select 
+            <label className="form-label">Account Type</label>
+            <input 
+              type="text"
               className="form-control"
-              value={formData.role}
-              onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-            >
-              <option value="SHOP_KEEPER">Shopkeeper (Store Owner / Manager)</option>
-              <option value="SUPER_ADMIN">System Administrator</option>
-            </select>
+              value="🏪 Shopkeeper (Store Owner / Manager)"
+              disabled
+              style={{ background: '#f8fafc', color: '#166534', fontWeight: 600 }}
+            />
+            <span style={{ fontSize: '0.72rem', color: '#64748b', marginTop: '0.25rem', display: 'block' }}>
+              ℹ️ Admin accounts are pre-configured system accounts and cannot be registered via public signup.
+            </span>
           </div>
 
           <div className="form-group">
@@ -130,7 +132,7 @@ const Signup = () => {
           </div>
 
           <button type="submit" className="btn btn-primary login-submit-btn" disabled={submitting}>
-            {submitting ? 'Creating Account...' : 'Create Account & Open Dashboard'}
+            {submitting ? 'Creating Account...' : 'Register Shopkeeper Account'}
           </button>
         </form>
 

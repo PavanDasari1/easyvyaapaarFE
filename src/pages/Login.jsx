@@ -1,12 +1,10 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { useLanguage } from '../i18n';
 import './Login.css';
 
 const Login = () => {
   const { login } = useAuth();
-  const { lang, setLang } = useLanguage();
   const navigate = useNavigate();
 
   const [selectedRole, setSelectedRole] = useState('SHOP_KEEPER');
@@ -17,43 +15,16 @@ const Login = () => {
   const [errorMsg, setErrorMsg] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
-  const handleQuickDemoLogin = (roleToLogin) => {
-    setSubmitting(true);
-    setTimeout(() => {
-      if (roleToLogin === 'SUPER_ADMIN') {
-        login({
-          id: 1,
-          name: 'Dasari Pavan',
-          email: 'admin@easyvyaapaar.com',
-          mobile: '+91 9876543210',
-          role: 'SUPER_ADMIN',
-          shopName: 'All Shops System Access',
-          status: 'ACTIVE'
-        });
-        navigate('/AdminDashboard');
-      } else {
-        login({
-          id: 2,
-          name: 'Ramesh Kumar',
-          email: 'shopkeeper@easyvyaapaar.com',
-          mobile: '+91 9876500111',
-          role: 'SHOP_KEEPER',
-          shopName: 'Sri Lakshmi Kirana & General Store',
-          status: 'ACTIVE'
-        });
-        navigate('/ShopkeeperDashboard');
-      }
-      setSubmitting(false);
-    }, 300);
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!formData.emailOrMobile.trim()) {
+    const inputStr = formData.emailOrMobile.trim();
+    const passStr = formData.password.trim();
+
+    if (!inputStr) {
       setErrorMsg('Please enter your Mobile number or Email address.');
       return;
     }
-    if (!formData.password) {
+    if (!passStr) {
       setErrorMsg('Please enter your password.');
       return;
     }
@@ -62,22 +33,41 @@ const Login = () => {
     setSubmitting(true);
 
     setTimeout(() => {
-      const isDemoAdmin = formData.emailOrMobile.toLowerCase().includes('admin') || selectedRole === 'SUPER_ADMIN';
-      const roleToSet = isDemoAdmin ? 'SUPER_ADMIN' : 'SHOP_KEEPER';
+      if (selectedRole === 'SUPER_ADMIN') {
+        // Strict System Admin Authentication Verification
+        const isAdminEmail = inputStr.toLowerCase() === 'admin@easyvyaapaar.com' || inputStr === '9876543210';
+        const isAdminPass = passStr === 'Admin@123';
 
-      login({
-        id: isDemoAdmin ? 1 : 2,
-        name: isDemoAdmin ? 'Dasari Pavan (Admin)' : 'Shop Owner',
-        email: formData.emailOrMobile,
-        mobile: '+91 9876543210',
-        role: roleToSet,
-        shopName: isDemoAdmin ? 'System Wide Access' : 'Sri Lakshmi Kirana Store',
-        status: 'ACTIVE'
-      });
+        if (isAdminEmail && isAdminPass) {
+          login({
+            id: 1,
+            name: 'Dasari Pavan (Admin)',
+            email: 'admin@easyvyaapaar.com',
+            mobile: '+91 9876543210',
+            role: 'SUPER_ADMIN',
+            shopName: 'All Shops System Access',
+            status: 'ACTIVE'
+          });
+          navigate('/AdminDashboard');
+        } else {
+          setErrorMsg('Invalid Admin credentials! System Admin credentials — Email: admin@easyvyaapaar.com | Password: Admin@123');
+        }
+      } else {
+        // Shopkeeper Login Authentication
+        login({
+          id: 2,
+          name: 'Shopkeeper User',
+          email: inputStr.includes('@') ? inputStr : `${inputStr}@shop.com`,
+          mobile: inputStr,
+          role: 'SHOP_KEEPER',
+          shopName: 'Sri Lakshmi Kirana & General Store',
+          status: 'ACTIVE'
+        });
+        navigate('/ShopkeeperDashboard');
+      }
 
-      navigate(isDemoAdmin ? '/AdminDashboard' : '/ShopkeeperDashboard');
       setSubmitting(false);
-    }, 400);
+    }, 300);
   };
 
   return (
@@ -95,31 +85,32 @@ const Login = () => {
           <button 
             type="button" 
             className={`role-tab-btn ${selectedRole === 'SHOP_KEEPER' ? 'active-tab' : ''}`}
-            onClick={() => setSelectedRole('SHOP_KEEPER')}
+            onClick={() => { setSelectedRole('SHOP_KEEPER'); setErrorMsg(''); }}
           >
             🏪 Shopkeeper
           </button>
           <button 
             type="button" 
             className={`role-tab-btn ${selectedRole === 'SUPER_ADMIN' ? 'active-tab' : ''}`}
-            onClick={() => setSelectedRole('SUPER_ADMIN')}
+            onClick={() => { setSelectedRole('SUPER_ADMIN'); setErrorMsg(''); }}
           >
             👑 Admin
           </button>
         </div>
 
-        {errorMsg && <div className="alert alert-danger" style={{ marginBottom: '1rem' }}>{errorMsg}</div>}
+        {errorMsg && <div className="alert alert-danger" style={{ marginBottom: '1rem', fontSize: '0.82rem' }}>{errorMsg}</div>}
 
         {/* Login Form */}
         <form onSubmit={handleSubmit} className="login-form">
           <div className="form-group">
-            <label className="form-label">Mobile Number or Email *</label>
+            <label className="form-label">{selectedRole === 'SUPER_ADMIN' ? 'Admin Email / Username' : 'Mobile Number or Email *'}</label>
             <input 
               type="text" 
               className="form-control"
               placeholder={selectedRole === 'SUPER_ADMIN' ? 'admin@easyvyaapaar.com' : 'Enter mobile number or email'}
               value={formData.emailOrMobile}
               onChange={(e) => setFormData({ ...formData, emailOrMobile: e.target.value })}
+              required
             />
           </div>
 
@@ -131,6 +122,7 @@ const Login = () => {
               placeholder="••••••••"
               value={formData.password}
               onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+              required
             />
           </div>
 
@@ -138,7 +130,7 @@ const Login = () => {
             <label className="remember-me-label">
               <input type="checkbox" defaultChecked /> Remember Me
             </label>
-            <a href="#forgot" className="forgot-password-link" onClick={(e) => { e.preventDefault(); alert('Password reset instructions sent to your registered mobile number via SMS.'); }}>
+            <a href="#forgot" className="forgot-password-link" onClick={(e) => { e.preventDefault(); alert('Password reset SMS sent to registered number.'); }}>
               Forgot Password?
             </a>
           </div>
@@ -148,30 +140,9 @@ const Login = () => {
           </button>
         </form>
 
-        {/* One-Click Instant Demo Login Buttons */}
-        <div className="demo-login-section">
-          <div className="demo-divider"><span>OR ONE-CLICK DEMO LOGIN</span></div>
-          <div className="demo-buttons-grid">
-            <button 
-              type="button" 
-              className="btn btn-secondary demo-btn shopkeeper-demo-btn"
-              onClick={() => handleQuickDemoLogin('SHOP_KEEPER')}
-            >
-              🏪 Demo Shopkeeper
-            </button>
-            <button 
-              type="button" 
-              className="btn btn-secondary demo-btn admin-demo-btn"
-              onClick={() => handleQuickDemoLogin('SUPER_ADMIN')}
-            >
-              👑 Demo Admin
-            </button>
-          </div>
-        </div>
-
         {/* Footer Link to Signup */}
         <div className="login-footer">
-          Don't have an account yet? <Link to="/signup" className="signup-link">Register New Shop</Link>
+          Don't have a shop account yet? <Link to="/signup" className="signup-link">Register New Shop</Link>
         </div>
       </div>
     </div>
