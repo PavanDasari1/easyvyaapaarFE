@@ -47,8 +47,18 @@ const ShopkeeperDashboard = ({ searchQuery = '' }) => {
     loadShopkeeperData();
     const interval = setInterval(() => {
       loadShopkeeperData();
-    }, 10000);
-    return () => clearInterval(interval);
+    }, 5000);
+
+    const handleDataChanged = () => {
+      loadShopkeeperData();
+    };
+
+    window.addEventListener('easyvyaapaar-data-changed', handleDataChanged);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('easyvyaapaar-data-changed', handleDataChanged);
+    };
   }, []);
 
   const handleCommandParsed = (parsed) => {

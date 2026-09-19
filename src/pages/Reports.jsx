@@ -12,6 +12,20 @@ const Reports = () => {
 
   useEffect(() => {
     loadData();
+    const interval = setInterval(() => {
+      loadData();
+    }, 5000);
+
+    const handleDataChanged = () => {
+      loadData();
+    };
+
+    window.addEventListener('easyvyaapaar-data-changed', handleDataChanged);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('easyvyaapaar-data-changed', handleDataChanged);
+    };
   }, []);
 
   const loadData = async () => {

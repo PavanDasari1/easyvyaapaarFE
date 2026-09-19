@@ -8,6 +8,20 @@ const ShopkeeperSales = () => {
 
   useEffect(() => {
     loadSales();
+    const interval = setInterval(() => {
+      loadSales();
+    }, 5000);
+
+    const handleDataChanged = () => {
+      loadSales();
+    };
+
+    window.addEventListener('easyvyaapaar-data-changed', handleDataChanged);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('easyvyaapaar-data-changed', handleDataChanged);
+    };
   }, []);
 
   const loadSales = async () => {

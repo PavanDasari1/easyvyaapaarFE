@@ -10,6 +10,20 @@ const ShopkeeperInventory = () => {
 
   useEffect(() => {
     loadInventory();
+    const interval = setInterval(() => {
+      loadInventory();
+    }, 5000);
+
+    const handleDataChanged = () => {
+      loadInventory();
+    };
+
+    window.addEventListener('easyvyaapaar-data-changed', handleDataChanged);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('easyvyaapaar-data-changed', handleDataChanged);
+    };
   }, []);
 
   const loadInventory = async () => {

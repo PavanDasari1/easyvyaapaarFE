@@ -120,36 +120,18 @@ const Login = () => {
           </button>
         </form>
 
-        {/* Quick Demo Login Access */}
-        <div style={{ marginTop: '1.25rem', paddingTop: '1rem', borderTop: '1px solid #e2e8f0', textAlign: 'center' }}>
-          <span style={{ fontSize: '0.78rem', color: '#64748b', fontWeight: 600, display: 'block', marginBottom: '0.6rem' }}>
-            ⚡ QUICK DEMO LOGINS (Click to Sign In):
-          </span>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
+        {/* Prominent Demo Accounts & Quick Sign-In Section */}
+        <div className="demo-login-section">
+          <div className="demo-divider">
+            <span>DEMO LOGIN ACCOUNTS</span>
+          </div>
+          <p style={{ fontSize: '0.78rem', color: '#64748b', marginBottom: '0.75rem', textAlign: 'center' }}>
+            Click any button below to instantly populate credentials & test the live UI:
+          </p>
+          <div className="demo-buttons-grid">
             <button 
               type="button" 
-              className="btn btn-secondary"
-              style={{ fontSize: '0.8rem', padding: '0.45rem', background: '#eff6ff', color: '#1d4ed8', borderColor: '#bfdbfe', fontWeight: 600 }}
-              onClick={() => {
-                setFormData({ emailOrMobile: 'admin@easyvyaapaar.com', password: 'Admin@123' });
-                login({
-                  id: 1,
-                  name: 'Dasari Pavan (Admin)',
-                  email: 'admin@easyvyaapaar.com',
-                  mobile: '+91 9876543210',
-                  role: 'SUPER_ADMIN',
-                  shopName: 'System Administration',
-                  status: 'ACTIVE'
-                });
-                navigate('/AdminDashboard');
-              }}
-            >
-              👑 Demo Admin
-            </button>
-            <button 
-              type="button" 
-              className="btn btn-secondary"
-              style={{ fontSize: '0.8rem', padding: '0.45rem', background: '#f0fdf4', color: '#15803d', borderColor: '#bbf7d0', fontWeight: 600 }}
+              className="btn demo-btn shopkeeper-demo-btn"
               onClick={() => {
                 setFormData({ emailOrMobile: 'shopkeeper@easyvyaapaar.com', password: 'Shopkeeper@123' });
                 login({
@@ -163,8 +145,34 @@ const Login = () => {
                 });
                 navigate('/ShopkeeperDashboard');
               }}
+              style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '0.65rem 0.4rem', cursor: 'pointer', textAlign: 'center' }}
             >
-              🏪 Demo Shopkeeper
+              <strong style={{ fontSize: '0.88rem' }}>🏪 Demo Shopkeeper</strong>
+              <span style={{ fontSize: '0.72rem', color: '#15803d', marginTop: '0.2rem' }}>shopkeeper@easyvyaapaar.com</span>
+              <span style={{ fontSize: '0.68rem', color: '#64748b' }}>Pass: Shopkeeper@123</span>
+            </button>
+
+            <button 
+              type="button" 
+              className="btn demo-btn admin-demo-btn"
+              onClick={() => {
+                setFormData({ emailOrMobile: 'admin@easyvyaapaar.com', password: 'Admin@123' });
+                login({
+                  id: 1,
+                  name: 'Dasari Pavan (Admin)',
+                  email: 'admin@easyvyaapaar.com',
+                  mobile: '+91 9876543210',
+                  role: 'SUPER_ADMIN',
+                  shopName: 'System Administration',
+                  status: 'ACTIVE'
+                });
+                navigate('/AdminDashboard');
+              }}
+              style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '0.65rem 0.4rem', cursor: 'pointer', textAlign: 'center' }}
+            >
+              <strong style={{ fontSize: '0.88rem' }}>👑 Demo Admin</strong>
+              <span style={{ fontSize: '0.72rem', color: '#1d4ed8', marginTop: '0.2rem' }}>admin@easyvyaapaar.com</span>
+              <span style={{ fontSize: '0.68rem', color: '#64748b' }}>Pass: Admin@123</span>
             </button>
           </div>
         </div>

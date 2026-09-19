@@ -13,6 +13,20 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     loadAdminData();
+    const interval = setInterval(() => {
+      loadAdminData();
+    }, 5000);
+
+    const handleDataChanged = () => {
+      loadAdminData();
+    };
+
+    window.addEventListener('easyvyaapaar-data-changed', handleDataChanged);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('easyvyaapaar-data-changed', handleDataChanged);
+    };
   }, []);
 
   const loadAdminData = async () => {
