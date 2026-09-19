@@ -1,11 +1,17 @@
 import { useLanguage } from '../../i18n';
+import { useAuth } from '../../context/AuthContext';
 import './Navbar.css';
 
 const Navbar = ({ searchQuery, setSearchQuery }) => {
   const { lang, setLang } = useLanguage();
+  const { role, setRole, isSuperAdmin, user } = useAuth();
 
   const handleLanguageChange = (e) => {
     setLang(e.target.value);
+  };
+
+  const handleRoleChange = (e) => {
+    setRole(e.target.value);
   };
 
   return (
@@ -15,7 +21,7 @@ const Navbar = ({ searchQuery, setSearchQuery }) => {
         <input 
           type="text" 
           className="search-input" 
-          placeholder="Search products... (e.g., rice, sugar, oil)"
+          placeholder="Search catalog or system... (e.g., rice, sugar, oil)"
           value={searchQuery || ''}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
@@ -23,6 +29,19 @@ const Navbar = ({ searchQuery, setSearchQuery }) => {
       </div>
 
       <div className="navbar-actions">
+        {/* Role Selector Badge */}
+        <div className="role-selector-wrapper" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', background: isSuperAdmin ? '#eff6ff' : '#f0fdf4', padding: '0.35rem 0.65rem', borderRadius: '8px', border: isSuperAdmin ? '1px solid #bfdbfe' : '1px solid #bbf7d0' }}>
+          <span style={{ fontSize: '0.85rem' }}>{isSuperAdmin ? '👑' : '🏪'}</span>
+          <select 
+            value={role} 
+            onChange={handleRoleChange}
+            style={{ border: 'none', background: 'transparent', fontSize: '0.82rem', fontWeight: '600', color: isSuperAdmin ? '#1e40af' : '#166534', cursor: 'pointer', outline: 'none' }}
+          >
+            <option value="SUPER_ADMIN">Admin View</option>
+            <option value="SHOP_KEEPER">Shopkeeper View</option>
+          </select>
+        </div>
+
         <div className="lang-dropdown-wrapper">
           <span className="globe-icon">🌐</span>
           <select 
@@ -45,9 +64,13 @@ const Navbar = ({ searchQuery, setSearchQuery }) => {
         </button>
 
         <div className="user-profile">
-          <div className="user-avatar">S</div>
-          <span className="user-name">Shop Owner</span>
-          <span className="dropdown-arrow">▾</span>
+          <div className="user-avatar" style={{ background: isSuperAdmin ? '#2563eb' : '#16a34a' }}>
+            {isSuperAdmin ? 'A' : 'S'}
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <span className="user-name">{isSuperAdmin ? 'System Admin' : user.shopkeeperName || 'Shopkeeper'}</span>
+            <span style={{ fontSize: '0.7rem', color: '#64748b', fontWeight: 500 }}>{isSuperAdmin ? 'All Shops Access' : user.shopName || 'Kirana Shop'}</span>
+          </div>
         </div>
       </div>
     </header>
